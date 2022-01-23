@@ -1,6 +1,6 @@
 # ProgramManager
 A program manager housing multiple programs including the finished Password Manager.
-This was a project I was working on when I first learned C++.
+This was a project I was working on when I was beginning to learn C++.
 
 Programs:
 - Password Manager
