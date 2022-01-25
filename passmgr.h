@@ -11,12 +11,10 @@ using namespace std;
 using namespace std::this_thread;
 using namespace std::chrono_literals;
 
-//When changing the version number, edit the variable "version" in filecheck() and passwordmgr().
-
 string passwordentry() //Password Data Entry Code
 {
-	string Input = ".";
-	string passcorrect = ".";
+	string Input;
+	string passcorrect;
 	std::cout << "\nPlease enter the Password you wish to store.\n\nPassword: ";
 	std::cin >> Input;
 	std::cout << "\n\n\"" << Input << "\" Is this Password correct? (Y/N)\n";
@@ -35,7 +33,7 @@ string passwordentry() //Password Data Entry Code
 	else if (passcorrect == "N" || passcorrect == "n")
 	{
 		system("cls");
-		passwordentry();
+		string passwordentry();
 	}
 
 	//return("0");
@@ -44,10 +42,10 @@ string passwordentry() //Password Data Entry Code
 string newdataentry() //Main Username + Password Data Entry Code
 {
 	system("cls");
-	string UsernameInput = ".";
-	string PasswordInput = ".";
+	string UsernameInput;
+	string PasswordInput;
 	string usercorrect;
-	std::cout << "\nPassword Manager: New Username and Password Entry\n\n" << "Please enter the Username you wish to store.\n\nUsername/Email: ";
+	std::cout << "\nPassword Manager: Username and Password New Entry\n\n" << "Please enter the Username you wish to store.\n\nUsername/Email: ";
 	std::cin >> UsernameInput;
 	std::cout << "\n\n\"" << UsernameInput << "\" Is this Username/Email correct? (Y/N)\n";
 	std::cin >> usercorrect;
@@ -58,12 +56,12 @@ string newdataentry() //Main Username + Password Data Entry Code
 		std::cin >> usercorrect;
 	}
 
-	if (usercorrect == "Y" || usercorrect == "y") //Launches passwordentry() and gets the return value and places it in Credentials
+	if (usercorrect == "Y" || usercorrect == "y")
 	{
 		PasswordInput = passwordentry();
 		string Credentials = UsernameInput + " " + PasswordInput;
 
-		return(Credentials); //Passes off Credentials to passwordmgr()
+		return(Credentials);
 	}
 	else if (usercorrect == "N" || usercorrect == "n")
 	{
@@ -74,16 +72,9 @@ string newdataentry() //Main Username + Password Data Entry Code
 	//return("0");
 }
 
-int passwordviewer()
-{
-	return(0);
-}
-
 bool filecheck()
 {
-	double version = 0.02;
-
-	if (std::filesystem::exists("passfile.txt") == true) //Checks if "passfile.txt" exists and if it does returns true for passwordmgr() to evaluate
+	if (std::filesystem::exists("passfile.txt") == true)
 	{
 		return(true);
 	}
@@ -103,14 +94,14 @@ bool filecheck()
 		if (choice == "Y" || choice == "y")
 		{
 			ofstream passtxt("passfile.txt");
-			passtxt << "Password Manager v" << version << " by Ahmed Osman\n" << "Usernames/Passwords:\n";
+			passtxt << "Password Manager v0.01\n" << "Usernames/Passwords:\n";
 			passtxt.close();
 			std::cout << "\nPassword database file created!" << " (\"" << filename << "\")\n";
 			sleep_for(2s);
 			
 			return(false);
 		}
-		else if (choice == "N" || choice == "n") //Prompts to return to Program Manager
+		else if (choice == "N" || choice == "n")
 		{
 			string choice;
 			std::cout << "Return to Program Manager? (Y/N)\n";
@@ -124,7 +115,8 @@ bool filecheck()
 
 			if (choice == "Y" || choice == "y")
 			{
-				return(1000); //returns 1000 to main() in main.cpp so that main() can boot programmgr
+				system("cls");
+				programmanager();
 			}
 			else if (choice == "N" || choice == "n")
 			{
@@ -137,16 +129,14 @@ bool filecheck()
 
 int passwordmgr()
 {
-	double version = 0.02;
-
 	string filename = "passfile.txt";
-	std::cout << "Welcome to the Password Manager v" << version << "!\nHere you can store and retrieve usernames and passwords all in one place.\n\n";
+	std::cout << "Welcome to the Password Manager v0.01!\nHere you can store and retrieve usernames and passwords all in one place.\n\n";
 	bool fileexists = filecheck();
 
 	if (fileexists == true) //Sequence for if "passfile.txt" (file where usernames+passwords are stored) does exist
 	{
 		std::cout << "Password database file detected! (\"passfile.txt\")\n\n";
-		std::cout << "Which action do you wish to take?\n\n" << "  1) Create New Username + Password Entry\n  2) View Usernames and Passwords\n  3) Delete Username + Password Database File (" << filename << ")\n\n  0) Exit Password Manager\n\nPlease enter your choice.\n";
+		std::cout << "Which action do you wish to take?\n\n" << "  1) Create New Username + Password Entry\n  2) View Usernames and Passwords\n  3) Delete Username + Password Database File (" << filename << ")\n\n  0) Return to Program Manager\n\nPlease enter your choice.\n";
 		int choice;
 		std::cin >> choice;
 
@@ -210,30 +200,8 @@ int passwordmgr()
 		}
 		else if (choice == 0)
 		{
-			int exitchoice;
 			system("cls");
-			std::cout << "\nProgram Manager: Exit Actions\n\nWhich action do you wish to take?\n\n  1) Return to Program Manager\n  2) Exit Application\n\n  0) Go Back to Password Manager\n\nPlease enter your choice.\n";
-			std::cin >> exitchoice;
-
-			while (exitchoice != 1 && exitchoice != 2 && exitchoice != 0)
-			{
-				std::cout << "Invalid input. Please enter a number corresponding to your choice.\n";
-				std::cin >> exitchoice;
-			}
-			if (exitchoice == 0)
-			{
-				system("cls");
-				passwordmgr();
-			}
-			else if (exitchoice == 1)
-			{
-				return(1000);
-			}
-			else if (exitchoice == 2)
-			{
-				return(100);
-			}
-			
+			programmanager();
 		}
 
 	}
@@ -243,9 +211,9 @@ int passwordmgr()
 		passwordmgr();
 	}
 
-	//return(0);
-	//TO-DO: [DONE]1) Finish code for choice == 1 and choice == 2 by adding a new entry interface and opening the .txt file to view usernames and passwords until
-	//an actual reader within the program is created. 2) Encrypt any usernames and passwords that are stored. [DONE]3) Find a way to take the return strings from
+	return(0);
+	//TO-DO: 1) Finish code for choice == 1 and choice == 2 by adding a new entry interface and opening the .txt file to view usernames and passwords until
+	//an actual reader within the program is created. 2) Encrypt any usernames and passwords that are stored. 3) Find a way to take the return strings from
 	//newdataentry() and store it in a variable in the main program so that it can be stored in passfile.txt as an entry. 4) (Not a priority) Add a secure
-	//random password generator. 5) Add exit option in main menu of passmgr and have the submenu display two options: Return to prgmgr and close application.
+	//random password generator.
 }
